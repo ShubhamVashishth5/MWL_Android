@@ -18,7 +18,14 @@ class InterceptorModule {
     @Named("authTokenInterceptor")
     fun provideAuthTokenInterceptor(): Interceptor{
         return Interceptor { chain ->
-            val request= chain.request().newBuilder().addHeader("api_Key","f71acba4f6d494b5f7d66b19dde5267c")
+            val url= chain.request().url
+                .newBuilder()
+                .addQueryParameter("api_key","f71acba4f6d494b5f7d66b19dde5267c")
+                .build()
+//            val request= chain.request()
+//                .newBuilder()
+//                .addHeader("api_Key","f71acba4f6d494b5f7d66b19dde5267c")
+            val request= chain.request().newBuilder().url(url)
             chain.proceed(request.build())
         }
     }
@@ -27,7 +34,7 @@ class InterceptorModule {
     @Singleton
     fun httpLoggingInterceptor(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BASIC
+            level = HttpLoggingInterceptor.Level.HEADERS
         }
     }
 
